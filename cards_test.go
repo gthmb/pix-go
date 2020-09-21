@@ -67,26 +67,46 @@ func TestShuffleDeck(t *testing.T) {
 
 }
 
-func TestDealOneCard(t *testing.T) {
+func TestDealCards(t *testing.T) {
 	var deck *Deck = createDeck()
 	deckIndex := deck.Index
-	card := Card{}
 
-	// deal ten and test after each
+	// deal groups of cards, from 1 to 10
 	for i := 0; i < 10; i++ {
-		card = dealOneCard(deck)
-		expectedCard := deck.Cards[i]
+		cards, error := dealCards(deck, i)
+		expectedIndex := deckIndex + i;
+		expectedCards := deck.Cards[deckIndex:expectedIndex];
 
-		if card != expectedCard {
-			t.Errorf("The Card should be the same as the deck's card at it's Index. Got %v, expected %v", card, expectedCard)
+		if( error != nil ) {
+			t.Errorf("error dealing cards: %v", error)
 		}
 
-		index, expectedIndex := deck.Index, deckIndex+i+1
-		if index != expectedIndex {
-			t.Errorf("Dealing a card should return a deck with an incremented Index. Got %d, expected %d", index, expectedIndex)
+		if l := len(cards); l != i  {
+			t.Errorf("Should have dealt %d cards, but only got %d", i, l)
+		}
+
+		if( deck.Index != expectedIndex) {
+			t.Errorf("After the deal the index should be %d, not %d", deckIndex, deck.Index)
+		}
+
+		deckIndex = expectedIndex;
+
+		for i = 0; i < len(cards); i ++ {
+			if c, e := cards[i], expectedCards[i]; c != e {
+				t.Errorf("Got %v, but expected %v", c, e)
+			}
 		}
 	}
+}
 
+func TestDealTooManyCards(t *testing.T) {
+	var deck = createDeck()
+
+	cards, error := dealCards(deck, 1000)
+
+	if (cards != nil || error == nil) {
+		t.Error("Should have errored on the deal, deck does not contain 1000 cards")
+	}
 }
 
 func TestGetCardLabel(t *testing.T) {
