@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func verifyDeck(t *testing.T, deck Deck) {
+func verifyDeck(t *testing.T, deck *Deck) {
 	length, expectedLength := len(deck.Cards), 52
 	index, expectedIndex := deck.Index, 0
 
@@ -49,7 +49,7 @@ func TestCreateDeck(t *testing.T) {
 
 func TestShuffleDeck(t *testing.T) {
 	deck := createDeck()
-	shuffled := shuffle(deck)
+	shuffled := shuffle(createDeck())
 
 	verifyDeck(t, shuffled)
 
@@ -68,13 +68,13 @@ func TestShuffleDeck(t *testing.T) {
 }
 
 func TestDealOneCard(t *testing.T) {
-	deck := createDeck()
+	var deck *Deck = createDeck()
 	deckIndex := deck.Index
 	card := Card{}
 
 	// deal ten and test after each
 	for i := 0; i < 10; i++ {
-		card, deck = dealOneCard(deck)
+		card = dealOneCard(deck)
 		expectedCard := deck.Cards[i]
 
 		if card != expectedCard {
