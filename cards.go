@@ -26,9 +26,13 @@ func main() {
 
 	shuffle(deck);
 
-	for i := 0; i < len(deck.Cards); i++ {
-		card := dealOneCard(deck)
-		fmt.Printf("Dealing: %s\n", getCardLabel(card))
+	for i := 0; i < len(deck.Cards) + 1; i++ {
+		cards, error := dealCards(deck, 1)
+		if error == nil {
+			for _, i := range cards {
+				fmt.Printf("Dealing: %s\n", getCardLabel(i))
+			}
+		}
 	}
 }
 
@@ -42,10 +46,17 @@ func createDeck() *Deck {
 	return &deck
 }
 
-func dealOneCard(deck *Deck) (Card) {
-	card := deck.Cards[deck.Index];
-	deck.Index++
-	return card
+func dealCards(deck *Deck, num int) ([]Card, error) {
+	newIndex := deck.Index + num
+
+	if l := len(deck.Cards); newIndex >= l {
+		return nil, fmt.Errorf("cannot deal %d cards since the Index is %d and there are only %d in the deck", num, deck.Index, l)
+	}
+
+	cards := deck.Cards[deck.Index:newIndex]
+	deck.Index = newIndex;
+
+	return cards, nil
 }
 
 func shuffle(deck *Deck) *Deck {
