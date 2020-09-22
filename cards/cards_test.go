@@ -1,4 +1,4 @@
-package main
+package cards
 
 import (
 	"fmt"
@@ -26,8 +26,8 @@ func verifyDeck(t *testing.T, deck *Deck) {
 		verifyValues[card.Value]++
 	}
 
-	suitLength := len(suitLabels)
-	valueLength := len(valueLabels)
+	suitLength := len(SuitLabels)
+	valueLength := len(ValueLabels)
 
 	for i := 0; i < suitLength; i++ {
 		if verifySuits[i] != valueLength {
@@ -43,13 +43,14 @@ func verifyDeck(t *testing.T, deck *Deck) {
 }
 
 func TestCreateDeck(t *testing.T) {
-	deck := createDeck()
+	deck := CreateDeck()
 	verifyDeck(t, deck)
 }
 
 func TestShuffleDeck(t *testing.T) {
-	deck := createDeck()
-	shuffled := shuffle(createDeck())
+	deck := CreateDeck()
+	shuffled := CreateDeck()
+	shuffled.Shuffle()
 
 	verifyDeck(t, shuffled)
 
@@ -68,12 +69,12 @@ func TestShuffleDeck(t *testing.T) {
 }
 
 func TestDealCards(t *testing.T) {
-	var deck *Deck = createDeck()
+	var deck *Deck = CreateDeck()
 	deckIndex := deck.Index
 
 	// deal groups of cards, from 1 to 10
 	for i := 0; i < 10; i++ {
-		cards, error := dealCards(deck, i)
+		cards, error := deck.DealCards(i)
 		expectedIndex := deckIndex + i;
 		expectedCards := deck.Cards[deckIndex:expectedIndex];
 
@@ -100,19 +101,19 @@ func TestDealCards(t *testing.T) {
 }
 
 func TestDealTooManyCards(t *testing.T) {
-	var deck = createDeck()
+	var deck = CreateDeck()
 
-	cards, error := dealCards(deck, 1000)
+	cards, error := deck.DealCards(1000)
 
 	if (cards != nil || error == nil) {
 		t.Error("Should have errored on the deal, deck does not contain 1000 cards")
 	}
 }
 
-func TestGetCardLabel(t *testing.T) {
+func TestDescribeCard(t *testing.T) {
 	for i := 0; i < 52; i++ {
 		card := Card{Suit: i % 4, Value: i % 13}
-		cardLabel, expectedLabel := getCardLabel(card), fmt.Sprintf("%s of %s", valueLabels[card.Value], suitLabels[card.Suit])
+		cardLabel, expectedLabel := card.Describe(), fmt.Sprintf("%s of %s", ValueLabels[card.Value], SuitLabels[card.Suit])
 		if( cardLabel != expectedLabel){
 			t.Errorf("Expected card label to be %s, but got %s", cardLabel, expectedLabel)
 		}
