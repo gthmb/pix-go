@@ -5,11 +5,11 @@ Learnin' me up some Go with Pixability's `golang-chapter`
 ## Running
 
 ```
-go run cards.go
+go run main.go
 ```
 
 ## Testing
 
 ```
-go test
+go test ./..
 ```
