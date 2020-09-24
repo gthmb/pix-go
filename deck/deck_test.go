@@ -1,11 +1,13 @@
-package cards
+package deck
 
 import (
 	"fmt"
 	"testing"
+
+	"github.com/gthmb/pix-go/card"
 )
 
-func verifyDeck(t *testing.T, deck *Deck) {
+func verifyDeck(t *testing.T, deck Deck) {
 	length, expectedLength := len(deck.Cards), 52
 	index, expectedIndex := deck.Index, 0
 
@@ -26,8 +28,8 @@ func verifyDeck(t *testing.T, deck *Deck) {
 		verifyValues[card.Value]++
 	}
 
-	suitLength := len(SuitLabels)
-	valueLength := len(ValueLabels)
+	suitLength := len(card.SuitLabels)
+	valueLength := len(card.ValueLabels)
 
 	for i := 0; i < suitLength; i++ {
 		if verifySuits[i] != valueLength {
@@ -65,34 +67,35 @@ func TestShuffleDeck(t *testing.T) {
 	if deckHash == shuffleHash {
 		t.Error("The hash of shuffled deck should be different than that of the unshuffled deck")
 	}
-
 }
 
 func TestDealCards(t *testing.T) {
-	var deck *Deck = CreateDeck()
+	var deck Deck = CreateDeck()
+	var deckValue = &deck
+
 	deckIndex := deck.Index
 
 	// deal groups of cards, from 1 to 10
 	for i := 0; i < 10; i++ {
-		cards, error := deck.DealCards(i)
-		expectedIndex := deckIndex + i;
-		expectedCards := deck.Cards[deckIndex:expectedIndex];
+		cards, error := deckValue.DealCards(i)
+		expectedIndex := deckIndex + i
+		expectedCards := deck.Cards[deckIndex:expectedIndex]
 
-		if( error != nil ) {
+		if error != nil {
 			t.Errorf("error dealing cards: %v", error)
 		}
 
-		if l := len(cards); l != i  {
+		if l := len(cards); l != i {
 			t.Errorf("Should have dealt %d cards, but only got %d", i, l)
 		}
 
-		if( deck.Index != expectedIndex) {
-			t.Errorf("After the deal the index should be %d, not %d", deckIndex, deck.Index)
+		if deckValue.Index != expectedIndex {
+			t.Errorf("After the deal the index should be %d, not %d", deckIndex, deckValue.Index)
 		}
 
-		deckIndex = expectedIndex;
+		deckIndex = expectedIndex
 
-		for i = 0; i < len(cards); i ++ {
+		for i = 0; i < len(cards); i++ {
 			if c, e := cards[i], expectedCards[i]; c != e {
 				t.Errorf("Got %v, but expected %v", c, e)
 			}
@@ -105,17 +108,7 @@ func TestDealTooManyCards(t *testing.T) {
 
 	cards, error := deck.DealCards(1000)
 
-	if (cards != nil || error == nil) {
+	if cards != nil || error == nil {
 		t.Error("Should have errored on the deal, deck does not contain 1000 cards")
-	}
-}
-
-func TestDescribeCard(t *testing.T) {
-	for i := 0; i < 52; i++ {
-		card := Card{Suit: i % 4, Value: i % 13}
-		cardLabel, expectedLabel := card.Describe(), fmt.Sprintf("%s of %s", ValueLabels[card.Value], SuitLabels[card.Suit])
-		if( cardLabel != expectedLabel){
-			t.Errorf("Expected card label to be %s, but got %s", cardLabel, expectedLabel)
-		}
 	}
 }
