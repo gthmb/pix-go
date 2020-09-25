@@ -4,15 +4,14 @@ import (
 	"fmt"
 
 	"github.com/gthmb/pix-go/deck"
-	"github.com/gthmb/pix-go/player"
 )
 
 // Game struct
 type Game struct {
-	ID      string
-	DeckID  string
-	Players []player.Player
-	Started bool
+	ID        string
+	DeckID    string
+	PlayerIDs []string
+	Started   bool
 }
 
 // Map struct
@@ -22,18 +21,18 @@ type Map map[string]Game
 var GameMap Map = make(map[string]Game)
 
 // CreateGame makes a game with the supplied players
-func CreateGame(players []player.Player) (Game, deck.Deck, error) {
-	if players == nil {
-		players = make([]player.Player, 0)
+func CreateGame(playerIDs []string) (Game, deck.Deck, error) {
+	if playerIDs == nil {
+		playerIDs = make([]string, 0)
 	}
 
 	deck := deck.CreateDeck()
 
 	return Game{
-		ID:      fmt.Sprint(len(GameMap) + 1),
-		Players: players,
-		DeckID:  deck.ID,
-		Started: false,
+		ID:        fmt.Sprint(len(GameMap) + 1),
+		PlayerIDs: playerIDs,
+		DeckID:    deck.ID,
+		Started:   false,
 	}, deck, nil
 }
 
