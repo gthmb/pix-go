@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 
+	"github.com/gthmb/pix-go/deck"
 	"github.com/gthmb/pix-go/util"
 )
 
@@ -27,13 +28,21 @@ func FetchAll() (Map, error) {
 	return dest, nil
 }
 
+// CreateAndWrite creates a game with a deck and saves the resources to disk
+func CreateAndWrite() (newGame Game, newDeck deck.Deck, err error) {
+	newGame, newDeck, err = CreateGame()
+	Put(newGame)
+	deck.Put(newDeck)
+	return
+}
+
 // WriteAll blah
 func WriteAll() error {
 	return util.WriteJSONFile(filePath, GameMap)
 }
 
 // Put blah
-func Put(id string, game Game) error {
-	GameMap[id] = game
+func Put(game Game) error {
+	GameMap[game.ID] = game
 	return WriteAll()
 }

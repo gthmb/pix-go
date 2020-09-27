@@ -33,7 +33,7 @@ func WriteAll() error {
 }
 
 // Put blah
-func Put(id string, deck Deck) error {
-	DeckMap[id] = deck
+func Put(deck Deck) error {
+	DeckMap[deck.ID] = deck
 	return WriteAll()
 }

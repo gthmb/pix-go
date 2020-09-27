@@ -6,8 +6,12 @@ import (
 	"github.com/gthmb/pix-go/util"
 )
 
-// HandleDeckDetail handles the http request/response for the game detail endpoint
-func HandleDeckDetail(w http.ResponseWriter, r *http.Request) {
+// HandleDetail handles the http request/response for the game detail endpoint
+func HandleDetail(w http.ResponseWriter, r *http.Request) {
+	if ok := util.ValidateRequestMethod([]string{"GET"}, w, r); !ok {
+		return
+	}
+
 	_, id, action := util.GetRouteParams(r.URL.Path)
 
 	deckVal, ok := DeckMap[id]

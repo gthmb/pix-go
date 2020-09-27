@@ -1,30 +1,29 @@
 package player
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gthmb/pix-go/util"
 )
 
-// HandlePlayerList handles the http request/response for the player list endpoint
-func HandlePlayerList(w http.ResponseWriter, r *http.Request) {
+// HandleList handles the http request/response for the player list endpoint
+func HandleList(w http.ResponseWriter, r *http.Request) {
+	if ok := util.ValidateRequestMethod([]string{"GET", "POST"}, w, r); !ok {
+		return
+	}
+
 	switch r.Method {
 	case "GET":
 		util.WriteJSONResponse(w, PlayerMap.ToSlice())
 	case "POST":
-		newPlayer, _ := CreatePlayer()
-		Put(newPlayer.ID, newPlayer)
+		newPlayer, _ := CreateAndWrite()
 		util.WriteJSONResponse(w, newPlayer)
-	default:
-		util.WriteErrorResponse(w, http.StatusMethodNotAllowed, fmt.Sprintf("%s not allowed", r.Method))
 	}
 }
 
-// HandlePlayerDetail handles the http request/response for the player detail endpoint
-func HandlePlayerDetail(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "GET" {
-		util.WriteErrorResponse(w, http.StatusMethodNotAllowed, fmt.Sprintf("%s not allowed", r.Method))
+// HandleDetail handles the http request/response for the player detail endpoint
+func HandleDetail(w http.ResponseWriter, r *http.Request) {
+	if ok := util.ValidateRequestMethod([]string{"GET"}, w, r); !ok {
 		return
 	}
 

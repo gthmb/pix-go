@@ -1,6 +1,7 @@
 package deck
 
 import (
+	"errors"
 	"fmt"
 	"math/rand"
 	"time"
@@ -21,9 +22,6 @@ type Map map[string]Deck
 // DeckMap is a map of all the Decks
 var DeckMap Map = make(map[string]Deck)
 
-// CurrentDeckID is a sill ID index trakcer
-var CurrentDeckID int = 0
-
 // CreateDeck creates a deck of cards
 func CreateDeck() Deck {
 
@@ -41,12 +39,12 @@ func CreateDeck() Deck {
 	return deck
 }
 
-// DealCards deals cards from a deck
-func (deck *Deck) DealCards(num int) ([]card.Card, error) {
+// DrawCards draws cards from a deck
+func (deck *Deck) DrawCards(num int) ([]card.Card, error) {
 	newIndex := deck.Index + num
 
 	if l := len(deck.Cards); newIndex >= l {
-		return nil, fmt.Errorf("cannot deal %d cards since the Index is %d and there are only %d in the deck", num, deck.Index, l)
+		return nil, errors.New("there are not enough cards left in deck")
 	}
 
 	cards := deck.Cards[deck.Index:newIndex]

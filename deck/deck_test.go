@@ -69,7 +69,7 @@ func TestShuffleDeck(t *testing.T) {
 	}
 }
 
-func TestDealCards(t *testing.T) {
+func TestDrawCards(t *testing.T) {
 	var deck Deck = CreateDeck()
 	var deckValue = &deck
 
@@ -77,7 +77,7 @@ func TestDealCards(t *testing.T) {
 
 	// deal groups of cards, from 1 to 10
 	for i := 0; i < 10; i++ {
-		cards, error := deckValue.DealCards(i)
+		cards, error := deckValue.DrawCards(i)
 		expectedIndex := deckIndex + i
 		expectedCards := deck.Cards[deckIndex:expectedIndex]
 
@@ -103,10 +103,10 @@ func TestDealCards(t *testing.T) {
 	}
 }
 
-func TestDealTooManyCards(t *testing.T) {
+func TestDrawTooManyCards(t *testing.T) {
 	var deck = CreateDeck()
 
-	cards, error := deck.DealCards(1000)
+	cards, error := deck.DrawCards(1000)
 
 	if cards != nil || error == nil {
 		t.Error("Should have errored on the deal, deck does not contain 1000 cards")

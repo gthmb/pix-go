@@ -42,3 +42,15 @@ func GetRouteParams(route string) (resource, id, action string) {
 	pathSlice := append(strings.Split(route, "/"), "", "", "", "")
 	return pathSlice[1], pathSlice[2], pathSlice[3]
 }
+
+// ValidateRequestMethod returns true if request method is in the allowed methods, otherwise write an http error and returns false
+func ValidateRequestMethod(methods []string, w http.ResponseWriter, r *http.Request) (ok bool) {
+	for _, method := range methods {
+		if r.Method == method {
+			return true
+		}
+	}
+
+	WriteErrorResponse(w, http.StatusMethodNotAllowed, fmt.Sprintf("%s not allowed", r.Method))
+	return false
+}

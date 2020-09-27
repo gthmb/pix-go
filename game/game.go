@@ -8,10 +8,10 @@ import (
 
 // Game struct
 type Game struct {
-	ID        string
-	DeckID    string
-	PlayerIDs []string
-	Started   bool
+	ID            string
+	DeckID        string
+	PlayerGameIDs []string
+	Started       bool
 }
 
 // Map struct
@@ -21,28 +21,39 @@ type Map map[string]Game
 var GameMap Map = make(map[string]Game)
 
 // CreateGame makes a game with the supplied players
-func CreateGame(playerIDs []string) (Game, deck.Deck, error) {
-	if playerIDs == nil {
-		playerIDs = make([]string, 0)
-	}
-
+func CreateGame() (Game, deck.Deck, error) {
 	deck := deck.CreateDeck()
 
 	return Game{
-		ID:        fmt.Sprint(len(GameMap) + 1),
-		PlayerIDs: playerIDs,
-		DeckID:    deck.ID,
-		Started:   false,
+		ID:            fmt.Sprint(len(GameMap) + 1),
+		PlayerGameIDs: make([]string, 0),
+		DeckID:        deck.ID,
+		Started:       false,
 	}, deck, nil
 }
 
 // Start starts a game
-func (game *Game) Start() bool {
+func (game Game) Start() (Game, error) {
 	if game.Started {
-		return false
+		return game, fmt.Errorf("game %s is already started", game.ID)
 	}
+
+	foundDeck, ok := deck.DeckMap[game.ID]
+
+	if !ok {
+		return game, fmt.Errorf("cannot find deck for game %s", game.ID)
+	}
+
+	if len(game.PlayerGameIDs) < 2 {
+		return game, fmt.Errorf("game %s needs at least 2 players", game.ID)
+	}
+
 	game.Started = true
-	return true
+	foundDeck.Shuffle()
+	Put(game)
+	deck.Put(foundDeck)
+
+	return game, nil
 }
 
 // ToSlice converts Map.Games into a slice of Games

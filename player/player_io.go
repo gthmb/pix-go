@@ -27,13 +27,20 @@ func FetchAll() (Map, error) {
 	return dest, nil
 }
 
+// CreateAndWrite creates a player and saves it to disk
+func CreateAndWrite() (newPlayer Player, err error) {
+	newPlayer, err = CreatePlayer()
+	Put(newPlayer)
+	return
+}
+
 // WriteAll blah
 func WriteAll() error {
 	return util.WriteJSONFile(filePath, PlayerMap)
 }
 
 // Put blah
-func Put(id string, player Player) error {
-	PlayerMap[id] = player
+func Put(player Player) error {
+	PlayerMap[player.ID] = player
 	return WriteAll()
 }

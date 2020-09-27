@@ -6,8 +6,7 @@ import (
 
 // Player struct
 type Player struct {
-	ID    string
-	Games []string
+	ID string
 }
 
 // Map struct
@@ -19,8 +18,7 @@ var PlayerMap Map = make(map[string]Player)
 // CreatePlayer makes a game with the supplied players
 func CreatePlayer() (Player, error) {
 	return Player{
-		ID:    fmt.Sprint(len(PlayerMap) + 1),
-		Games: make([]string, 0),
+		ID: fmt.Sprint(len(PlayerMap) + 1),
 	}, nil
 }
 
