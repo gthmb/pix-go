@@ -46,7 +46,7 @@ func HandleList(w http.ResponseWriter, r *http.Request) {
 }
 
 // using a named return, so fancy
-func getPlayerGameDetail(w http.ResponseWriter, r *http.Request) (found PlayerGame, ok bool) {
+func getPlayerGameDetail(w http.ResponseWriter, r *http.Request) (found *PlayerGame, ok bool) {
 	_, id, _ := util.GetRouteParams(r.URL.Path)
 	found, ok = PlayerGameMap[id]
 	if !ok {
@@ -57,7 +57,6 @@ func getPlayerGameDetail(w http.ResponseWriter, r *http.Request) (found PlayerGa
 
 // HandleDetail handles the http request/response for the PlayerGame detail endpoint
 func HandleDetail(w http.ResponseWriter, r *http.Request) {
-
 	if playerGame, ok := getPlayerGameDetail(w, r); ok {
 		util.WriteJSONResponse(w, playerGame)
 	}

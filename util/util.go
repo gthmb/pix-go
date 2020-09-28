@@ -50,7 +50,6 @@ func ValidateRequestMethod(methods []string, w http.ResponseWriter, r *http.Requ
 			return true
 		}
 	}
-
 	WriteErrorResponse(w, http.StatusMethodNotAllowed, fmt.Sprintf("%s not allowed", r.Method))
 	return false
 }

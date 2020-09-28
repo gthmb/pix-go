@@ -19,27 +19,26 @@ type PlayerGame struct {
 }
 
 // Map struct
-type Map map[string]PlayerGame
+type Map map[string]*PlayerGame
 
 // PlayerGameMap is a map of all the GamePlayer instances
-var PlayerGameMap Map = make(map[string]PlayerGame)
+var PlayerGameMap Map = make(map[string]*PlayerGame)
 
 // CreatePlayerGame makes a game with the supplied players
-func CreatePlayerGame(playerID, gameID string) (PlayerGame, error) {
-
+func CreatePlayerGame(playerID, gameID string) (*PlayerGame, error) {
 	if _, ok := player.PlayerMap[playerID]; !ok {
-		return PlayerGame{}, errors.New("Cannot find Player")
+		return &PlayerGame{}, errors.New("Cannot find Player")
 	}
 
 	foundGame, ok := game.GameMap[gameID]
 
 	if !ok {
-		return PlayerGame{}, errors.New("Cannot find Game")
+		return &PlayerGame{}, errors.New("Cannot find Game")
 	}
 
 	for _, pid := range foundGame.PlayerGameIDs {
 		if pid == playerID {
-			return PlayerGame{}, fmt.Errorf("Player %s is already in game %s", playerID, gameID)
+			return &PlayerGame{}, fmt.Errorf("Player %s is already in game %s", playerID, gameID)
 		}
 	}
 
@@ -53,11 +52,11 @@ func CreatePlayerGame(playerID, gameID string) (PlayerGame, error) {
 	foundGame.PlayerGameIDs = append(foundGame.PlayerGameIDs, playerGame.ID)
 	game.Put(foundGame)
 
-	return playerGame, nil
+	return &playerGame, nil
 }
 
 // DrawCards attempts to draw cards from the game deck into the players hand
-func (pg PlayerGame) DrawCards(num int) (PlayerGame, []card.Card, error) {
+func (pg *PlayerGame) DrawCards(num int) (*PlayerGame, []card.Card, error) {
 	var cards = make([]card.Card, 0)
 
 	if num < 1 {
@@ -95,8 +94,8 @@ func (pg PlayerGame) DrawCards(num int) (PlayerGame, []card.Card, error) {
 }
 
 // ToSlice converts Map.Games into a slice of Games
-func (m Map) ToSlice() []PlayerGame {
-	slice := make([]PlayerGame, len(m))
+func (m Map) ToSlice() []*PlayerGame {
+	slice := make([]*PlayerGame, len(m))
 	index := 0
 	for _, el := range m {
 		slice[index] = el

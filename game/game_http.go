@@ -22,7 +22,7 @@ func HandleList(w http.ResponseWriter, r *http.Request) {
 }
 
 // using a named return, so fancy
-func getGameDetail(w http.ResponseWriter, r *http.Request) (foundGame Game, ok bool) {
+func getGameDetail(w http.ResponseWriter, r *http.Request) (foundGame *Game, ok bool) {
 	_, id, _ := util.GetRouteParams(r.URL.Path)
 	foundGame, ok = GameMap[id]
 

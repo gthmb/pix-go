@@ -11,7 +11,7 @@ const filePath string = "./data/playergames.json"
 
 // FetchAll fetchs GamePlayer data from the filesystem
 func FetchAll() (Map, error) {
-	var dest = make(map[string]PlayerGame)
+	var dest = make(map[string]*PlayerGame)
 	data, err := ioutil.ReadFile(filePath)
 
 	if err != nil {
@@ -28,7 +28,7 @@ func FetchAll() (Map, error) {
 }
 
 // CreateAndWrite creates a playergame and saves it to disk
-func CreateAndWrite(playerID, gameID string) (newPlayerGame PlayerGame, err error) {
+func CreateAndWrite(playerID, gameID string) (newPlayerGame *PlayerGame, err error) {
 	newPlayerGame, err = CreatePlayerGame(playerID, gameID)
 	Put(newPlayerGame)
 	return
@@ -40,7 +40,7 @@ func WriteAll() error {
 }
 
 // Put blah
-func Put(el PlayerGame) error {
+func Put(el *PlayerGame) error {
 	PlayerGameMap[el.ID] = el
 	return WriteAll()
 }

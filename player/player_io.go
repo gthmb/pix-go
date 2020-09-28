@@ -11,7 +11,7 @@ const filePath string = "./data/players.json"
 
 // FetchAll fetchs Deck data from the filesystem
 func FetchAll() (Map, error) {
-	var dest = make(map[string]Player)
+	var dest = make(map[string]*Player)
 	data, err := ioutil.ReadFile(filePath)
 
 	if err != nil {
@@ -28,7 +28,7 @@ func FetchAll() (Map, error) {
 }
 
 // CreateAndWrite creates a player and saves it to disk
-func CreateAndWrite() (newPlayer Player, err error) {
+func CreateAndWrite() (newPlayer *Player, err error) {
 	newPlayer, err = CreatePlayer()
 	Put(newPlayer)
 	return
@@ -40,7 +40,7 @@ func WriteAll() error {
 }
 
 // Put blah
-func Put(player Player) error {
+func Put(player *Player) error {
 	PlayerMap[player.ID] = player
 	return WriteAll()
 }

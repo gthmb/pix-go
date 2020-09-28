@@ -15,16 +15,16 @@ type Game struct {
 }
 
 // Map struct
-type Map map[string]Game
+type Map map[string]*Game
 
 // GameMap is a map of all the Games
-var GameMap Map = make(map[string]Game)
+var GameMap Map = make(map[string]*Game)
 
 // CreateGame makes a game with the supplied players
-func CreateGame() (Game, deck.Deck, error) {
+func CreateGame() (*Game, *deck.Deck, error) {
 	deck := deck.CreateDeck()
 
-	return Game{
+	return &Game{
 		ID:            fmt.Sprint(len(GameMap) + 1),
 		PlayerGameIDs: make([]string, 0),
 		DeckID:        deck.ID,
@@ -33,7 +33,7 @@ func CreateGame() (Game, deck.Deck, error) {
 }
 
 // Start starts a game
-func (game Game) Start() (Game, error) {
+func (game *Game) Start() (*Game, error) {
 	if game.Started {
 		return game, fmt.Errorf("game %s is already started", game.ID)
 	}
@@ -57,8 +57,8 @@ func (game Game) Start() (Game, error) {
 }
 
 // ToSlice converts Map.Games into a slice of Games
-func (m Map) ToSlice() []Game {
-	slice := make([]Game, len(m))
+func (m Map) ToSlice() []*Game {
+	slice := make([]*Game, len(m))
 	index := 0
 	for _, el := range m {
 		slice[index] = el

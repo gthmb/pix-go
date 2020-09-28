@@ -2,12 +2,13 @@ package deck
 
 import (
 	"fmt"
+	"sync"
 	"testing"
 
 	"github.com/gthmb/pix-go/card"
 )
 
-func verifyDeck(t *testing.T, deck Deck) {
+func verifyDeck(t *testing.T, deck *Deck) {
 	length, expectedLength := len(deck.Cards), 52
 	index, expectedIndex := deck.Index, 0
 
@@ -70,10 +71,10 @@ func TestShuffleDeck(t *testing.T) {
 }
 
 func TestDrawCards(t *testing.T) {
-	var deck Deck = CreateDeck()
-	var deckValue = &deck
+	var deck *Deck = CreateDeck()
+	var deckValue = deck
 
-	deckIndex := deck.Index
+	deckIndex := 0
 
 	// deal groups of cards, from 1 to 10
 	for i := 0; i < 10; i++ {
@@ -112,3 +113,47 @@ func TestDrawTooManyCards(t *testing.T) {
 		t.Error("Should have errored on the deal, deck does not contain 1000 cards")
 	}
 }
+
+func TestDrawCardsConcurrency(t *testing.T) {
+	var wg sync.WaitGroup
+
+	deck := CreateDeck()
+	hand := make([]card.Card, 0)
+	numDeals, numCards := 3, 3
+	hasDupes := false
+
+	for i := 0; i < numDeals; i++ {
+		wg.Add(1)
+		go func(indx int) {
+			cards, _ := deck.DrawCards(numCards)
+
+			// if any card dealt back is already in the hand, set hasDupes to true
+			for _, el := range cards {
+				for _, la := range hand {
+					if el.Suit == la.Suit && el.Value == la.Value {
+						hasDupes = true
+					}
+				}
+			}
+
+			hand = append(hand, cards...)
+			wg.Done()
+		}(i)
+	}
+	wg.Wait()
+
+	l, expected := len(hand), numDeals*numCards
+	if l != numDeals*numCards {
+		t.Errorf("Hand should have %d cards, but got %d", expected, l)
+	}
+
+	if hasDupes {
+		t.Errorf("Hand has duplicate cards: %v", hand)
+	}
+}
+
+// work around handling flags in tests. @see https://github.com/golang/go/issues/31859#issuecomment-489889428
+var _ = func() bool {
+	testing.Init()
+	return true
+}()

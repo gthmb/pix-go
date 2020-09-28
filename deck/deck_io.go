@@ -11,7 +11,7 @@ const filePath string = "./data/decks.json"
 
 // FetchAll fetchs Deck data from the filesystem
 func FetchAll() (Map, error) {
-	var dest = make(map[string]Deck)
+	var dest = make(map[string]*Deck)
 	data, err := ioutil.ReadFile(filePath)
 
 	if err != nil {
@@ -33,7 +33,7 @@ func WriteAll() error {
 }
 
 // Put blah
-func Put(deck Deck) error {
+func Put(deck *Deck) error {
 	DeckMap[deck.ID] = deck
 	return WriteAll()
 }
