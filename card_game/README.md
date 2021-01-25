@@ -19,7 +19,7 @@ go run main.go -slowly
 ## Testing
 
 ```
-go test ./..
+go test ./...
 ```
 
 # API
