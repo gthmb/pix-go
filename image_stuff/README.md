@@ -9,3 +9,4 @@ Using to the image.Image interface to:
 
 https://leanpub.com/generative-art-in-golang
 https://golang.org/pkg/image/
+https://tour.golang.org/methods/24
