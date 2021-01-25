@@ -12,6 +12,8 @@ import (
 	"github.com/gthmb/pix-go/generative_art/util"
 )
 
+// copied from https://leanpub.com/generative-art-in-golang, and the slightly tweaked
+
 var (
 	strokeSize      = 2000.0
 	alpha           = 0.1

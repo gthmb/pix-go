@@ -8,6 +8,8 @@ import (
 	"github.com/fogleman/gg"
 )
 
+// copied from https://github.com/bcongdon/generative-doodles/tree/master/3-3-19 and tweaked
+
 const width = 1500
 const height = 1500
 const circleRadius = 500.0
